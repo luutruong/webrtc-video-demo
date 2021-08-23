@@ -14,5 +14,8 @@
     "start": "node dist/server.js",
     "dev": "nodemon server.ts",
     "build": "tsc --project ./"
+  },
+  "engines": {
+    "node": "15.x"
   }
 }
