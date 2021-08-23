@@ -27,6 +27,11 @@ var isRoomOwner = false;
 var _debugWebRTC = false;
 var _debugSocket = true;
 
+var rctOfferOptions = {
+  offerToReceiveVideo: true,
+  offerToReceiveAudio: true,
+};
+
 var peerConnections = {
   local: {},
   remote: {},
@@ -166,7 +171,7 @@ socket.on('webrtc-host-offer', function (data) {
     type: data.type,
     sdp: decodeURIComponent(data.sdp),
   }));
-  remoteConnection.createAnswer({offerToReceiveVideo: true, offerToReceiveAudio: false})
+  remoteConnection.createAnswer(rctOfferOptions)
     .then(function (description) {
       remoteConnection.setLocalDescription(description);
 
@@ -206,7 +211,7 @@ socket.on('webrtc-watcher-offer', function (data) {
     type: data.type,
     sdp: decodeURIComponent(data.sdp),
   }));
-  remoteConnection.createAnswer({offerToReceiveVideo: true, offerToReceiveAudio: false})
+  remoteConnection.createAnswer(rctOfferOptions)
     .then(function (description) {
       remoteConnection.setLocalDescription(description);
 
@@ -249,7 +254,7 @@ function createWatcher(id) {
     }
   };
   peerConnection.addStream(localStream);
-  peerConnection.createOffer({offerToReceiveAudio: false, offerToReceiveVideo: true})
+  peerConnection.createOffer(rctOfferOptions)
     .then(function (description) {
       peerConnection.setLocalDescription(description);
 
@@ -287,7 +292,7 @@ function createHost() {
   };
 
   peerConnection.addStream(localStream);
-  peerConnection.createOffer({offerToReceiveAudio: false, offerToReceiveVideo: true})
+  peerConnection.createOffer(rctOfferOptions)
     .then(function (description) {
       peerConnection.setLocalDescription(description);
 
