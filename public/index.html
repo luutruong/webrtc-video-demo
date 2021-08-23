@@ -33,24 +33,36 @@
         display: inline-block;
         margin: 0 20px;
       }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+      }
     </style>
   </head>
   <body>
-    <div class="pairs">
-      <video controls id="remote-video" width="640" height="360"></video>
-      <video muted id="local-video" width="240" height="120" style="margin-left: 10px;"></video>
-    </div>
-    <div class="pairs">
-      <div>
-        <input type="text" class="input" id="create-livestream-id" placeholder="Livestream ID" />
-        <button id="btn-start">Start</button>
+    <div class="container">
+      <div class="pairs">
+        <video controls id="remote-video" width="640" height="360"></video>
+        <video muted id="local-video" width="240" height="120" style="margin-left: 10px;"></video>
       </div>
-      <span class="separator">OR</span>
-      <div>
-        <input type="text" class="input" id="join-livestream-id" placeholder="Livestream ID" />
-        <button id="btn-join">Join Livestream</button>
+      <div class="pairs">
+        <div>
+          <input type="text" class="input" id="create-livestream-id" placeholder="Livestream ID" />
+          <button id="btn-start">Start</button>
+        </div>
+        <span class="separator">OR</span>
+        <div>
+          <input type="text" class="input" id="join-livestream-id" placeholder="Livestream ID" />
+          <button id="btn-join">Join Livestream</button>
+        </div>
+      </div>
+  
+      <div class="watchers">
+        <h3>Watchers</h3>
+        <ol id="watcher-list"></ol>
       </div>
     </div>
+
     <script src="https://webrtchacks.github.io/adapter/adapter-latest.js"></script>
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="js/app.js"></script>

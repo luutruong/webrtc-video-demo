@@ -63,41 +63,66 @@ io.on('connection', function (socket: Socket) {
     }
 
     _rooms[data.id].users = ARRAY_removeId(_rooms[data.id].users, socket.id);
+    io.to(_rooms[data.id].ownerUserId).emit('livestream-user-leaved', socket.id);
   });
 
-  socket.on('webrtc-local-offer', function (data: SocketEventWebRTCOffer) {
-    if (!_rooms[data.roomId]) {
+  socket.on('webrtc-host-offer', function (roomId: string, data: SocketEventWebRTCOffer) {
+    if (!_rooms[roomId]) {
       return;
     }
 
-    io.to(data.userId).emit('webrtc-remote-offer', data);
+    socket.emit('webrtc-host-offer', data);
   });
 
-  socket.on('webrtc-local-candidate', function (data: SocketEventWebRTCCandidate) {
-    if (!_rooms[data.roomId]) {
+  socket.on('webrtc-host-candidate', function (roomId: string, data: SocketEventWebRTCCandidate) {
+    if (!_rooms[roomId]) {
       return;
     }
 
-    io.to(data.userId).emit('webrtc-remote-candidate', data);
+    socket.emit('webrtc-host-candidate', data);
   });
 
-  socket.on('webrtc-remote-answer', function (data: SocketEventWebRTCAnswer) {
-    if (!_rooms[data.roomId]) {
+  socket.on('webrtc-host-remote-answer', function (roomId: string, data: SocketEventWebRTCAnswer) {
+    if (!_rooms[roomId]) {
       return;
     }
 
-    var toUserId = data.userId ?? _rooms[data.roomId].ownerUserId;
+    socket.emit('webrtc-host-remote-answer', data);
+  });
 
-    io.to(toUserId).emit('webrtc-remote-answered', data);
+  socket.on('webrtc-watcher-offer', function (roomId: string, userId: string, data: SocketEventWebRTCOffer) {
+    if (!_rooms[roomId] || _rooms[roomId].users.indexOf(userId) === -1) {
+      return;
+    }
+
+    io.to(userId).emit('webrtc-watcher-offer', data);
+  });
+
+  socket.on('webrtc-watcher-candidate', function (roomId: string, userId: string, data: SocketEventWebRTCCandidate) {
+    if (!_rooms[roomId] || _rooms[roomId].users.indexOf(userId) === -1) {
+      return;
+    }
+
+    io.to(userId).emit('webrtc-watcher-candidate', data);
+  });
+
+  socket.on('webrtc-watcher-remote-answer', function (roomId: string, data: SocketEventWebRTCAnswer) {
+    if (!_rooms[roomId]) {
+      return;
+    }
+
+    io.to(_rooms[roomId].ownerUserId).emit('webrtc-watcher-remote-answer', socket.id, data);
   });
 
   socket.on('disconnect', function () {
+    console.log('user disconnected', socket.id);
     _users = ARRAY_removeId(_users, socket.id);
     for (const id in _rooms) {
       if (_rooms[id].ownerUserId === socket.id) {
         delete _rooms[id];
       } else {
         _rooms[id].users = ARRAY_removeId(_rooms[id].users, socket.id);
+        io.to(_rooms[id].ownerUserId).emit('livestream-user-leaved', socket.id);
       }
     }
 
