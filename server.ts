@@ -115,7 +115,7 @@ io.on('connection', function (socket: Socket) {
   });
 
   socket.on('disconnect', function () {
-    console.log('user disconnected', socket.id);
+    console.log('user disconnect', socket.id);
     _users = ARRAY_removeId(_users, socket.id);
     for (const id in _rooms) {
       if (_rooms[id].ownerUserId === socket.id) {
@@ -125,8 +125,6 @@ io.on('connection', function (socket: Socket) {
         io.to(_rooms[id].ownerUserId).emit('livestream-user-leaved', socket.id);
       }
     }
-
-    console.log('user disconnect', socket.id);
   });
 });
 
