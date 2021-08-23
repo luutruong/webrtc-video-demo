@@ -128,6 +128,6 @@ io.on('connection', function (socket: Socket) {
   });
 });
 
-server.listen(8080, () => {
+server.listen(process.env.PORT || 8080, () => {
   console.log('App started at: http://localhost:8080');
 });
