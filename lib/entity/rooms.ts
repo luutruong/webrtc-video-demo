@@ -1,4 +1,4 @@
-import { Room } from "../..";
+import {Room} from "../..";
 
 class EntityRooms {
   private rooms: {[key: string]: Room};
@@ -18,7 +18,7 @@ class EntityRooms {
       ownerUserId,
     };
     this.addUser(roomId, ownerUserId);
-    console.log('created room', roomId, 'ownerUserId:', ownerUserId);
+    console.log("created room", roomId, "ownerUserId:", ownerUserId);
 
     return true;
   }
@@ -30,7 +30,7 @@ class EntityRooms {
   public delete(roomId: string): boolean {
     if (this.has(roomId)) {
       delete this.rooms[roomId];
-      console.log('deleted room', roomId);
+      console.log("deleted room", roomId);
 
       return true;
     }
@@ -71,7 +71,7 @@ class EntityRooms {
       return false;
     }
 
-    this.rooms[roomId].users = this.rooms[roomId].users.filter(id => id !== userId);
+    this.rooms[roomId].users = this.rooms[roomId].users.filter((id) => id !== userId);
 
     return true;
   }
