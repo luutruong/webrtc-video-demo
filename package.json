@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon server.ts",
-    "build": "sh build.sh",
+    "build": "bash build.sh",
     "prettier": "node node_modules/.bin/prettier --write ."
   },
   "engines": {
