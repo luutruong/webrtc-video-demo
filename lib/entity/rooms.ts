@@ -75,8 +75,6 @@ class EntityRooms {
 
     return room !== null && room.users.has(userId);
   }
-
-  public onUserDisconnected(userId: string) {}
 }
 
 export default EntityRooms;
