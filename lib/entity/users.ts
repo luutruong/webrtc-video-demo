@@ -1,4 +1,4 @@
-import {User} from "../..";
+import {User} from '../..';
 
 class EntityUsers {
   private users: {[id: string]: User};
@@ -7,7 +7,7 @@ class EntityUsers {
     this.users = users;
   }
 
-  public add(id: string, name: string = ""): void {
+  public add(id: string, name: string = ''): void {
     if (this.has(id)) {
       return;
     }

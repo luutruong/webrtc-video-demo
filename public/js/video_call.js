@@ -1,11 +1,11 @@
-var remoteVideoElement = document.getElementById("remote-video");
+var remoteVideoElement = document.getElementById('remote-video');
 
-var btnRegister = document.getElementById("btn-register");
-var inputName = document.getElementById("input-name");
+var btnRegister = document.getElementById('btn-register');
+var inputName = document.getElementById('input-name');
 
-var inputCallName = document.getElementById("input-call-name");
-var btnCall = document.getElementById("btn-call");
-var btnStop = document.getElementById("btn-stop");
+var inputCallName = document.getElementById('input-call-name');
+var btnCall = document.getElementById('btn-call');
+var btnStop = document.getElementById('btn-stop');
 inputCallName.disabled = true;
 btnCall.disabled = true;
 btnStop.disabled = true;
@@ -33,46 +33,46 @@ var rctOffer = {
 var iceServersConfig = {
   iceServers: [
     {
-      urls: ["stun:stun.l.google.com:19302"],
+      urls: ['stun:stun.l.google.com:19302'],
     },
   ],
 };
 
 btnRegister.addEventListener(
-  "click",
+  'click',
   function () {
-    var name = inputName.value.replace(/(^\s*|\s*$)/g, "");
+    var name = inputName.value.replace(/(^\s*|\s*$)/g, '');
 
     if (!name.length) {
-      alert("Please enter valid name");
+      alert('Please enter valid name');
       return;
     }
 
-    socket.emit("set-name", name);
+    socket.emit('set-name', name);
   },
   false
 );
 btnCall.addEventListener(
-  "click",
+  'click',
   function () {
-    var callee = inputCallName.value.replace(/(^\s*|\s*$)/g, "");
+    var callee = inputCallName.value.replace(/(^\s*|\s*$)/g, '');
     if (!callee.length) {
-      alert("Please enter valid participant name");
+      alert('Please enter valid participant name');
       return;
     }
 
     btnStop.disabled = true;
 
-    socket.emit("video-call-to", callee);
+    socket.emit('video-call-to', callee);
     this.disabled = true;
-    this.innerText = "Calling...";
+    this.innerText = 'Calling...';
   },
   false
 );
 btnStop.addEventListener(
-  "click",
+  'click',
   function () {
-    socket.emit("video-call-end", callRoomId);
+    socket.emit('video-call-end', callRoomId);
 
     closeVideoCall();
   },
@@ -80,10 +80,10 @@ btnStop.addEventListener(
 );
 
 // SOCKETS
-socket.on("set-name-error", function (err) {
+socket.on('set-name-error', function (err) {
   alert(err);
 });
-socket.on("set-name-ok", function () {
+socket.on('set-name-ok', function () {
   inputName.disabled = true;
   btnRegister.disabled = true;
 
@@ -91,25 +91,25 @@ socket.on("set-name-ok", function () {
   inputCallName.disabled = false;
 });
 
-socket.on("video-call-to-confirm", function (caller, roomId) {
-  console.log("video-call-to-confirm", caller);
-  var element = document.getElementsByClassName("calling")[0];
-  element.style.display = "block";
-  var text = element.getElementsByClassName("calling-text")[0];
-  text.innerText = caller.name + " calling...";
+socket.on('video-call-to-confirm', function (caller, roomId) {
+  console.log('video-call-to-confirm', caller);
+  var element = document.getElementsByClassName('calling')[0];
+  element.style.display = 'block';
+  var text = element.getElementsByClassName('calling-text')[0];
+  text.innerText = caller.name + ' calling...';
 
-  var btnAccept = element.getElementsByClassName("calling-accept")[0];
-  var btnDeny = element.getElementsByClassName("calling-deny")[0];
+  var btnAccept = element.getElementsByClassName('calling-accept')[0];
+  var btnDeny = element.getElementsByClassName('calling-deny')[0];
 
   btnStop.disabled = true;
 
   btnAccept.addEventListener(
-    "click",
+    'click',
     function () {
-      element.style.display = "none";
+      element.style.display = 'none';
 
       callRoomId = roomId;
-      socket.emit("video-call-accept", roomId);
+      socket.emit('video-call-accept', roomId);
 
       btnStop.disabled = false;
 
@@ -119,45 +119,45 @@ socket.on("video-call-to-confirm", function (caller, roomId) {
   );
 
   btnDeny.addEventListener(
-    "click",
+    'click',
     function () {
-      element.style.display = "none";
-      socket.emit("video-call-deny", roomId);
+      element.style.display = 'none';
+      socket.emit('video-call-deny', roomId);
     },
     false
   );
 });
 
-socket.on("video-call-user-accepted", function (callee, roomId) {
-  console.log("video-call-user-accepted", callee, roomId);
+socket.on('video-call-user-accepted', function (callee, roomId) {
+  console.log('video-call-user-accepted', callee, roomId);
   btnStop.disabled = false;
 
   callRoomId = roomId;
   // create host
   setupLocalConnection(socket.id);
 });
-socket.on("video-call-user-denied", function () {
+socket.on('video-call-user-denied', function () {
   btnCall.disabled = false;
-  btnCall.innerText = "Call";
+  btnCall.innerText = 'Call';
 });
 
-socket.on("video-call-ended", function () {
-  console.log("video-call-ended");
+socket.on('video-call-ended', function () {
+  console.log('video-call-ended');
   callRoomId = null;
   closeVideoCall();
 });
 
-socket.on("video-call-to-error", function (err) {
+socket.on('video-call-to-error', function (err) {
   btnCall.disabled = false;
-  btnCall.innerText = "Call";
+  btnCall.innerText = 'Call';
   alert(err);
 });
 
 // WebRTC events
-socket.on("video-call-local-offer", function (offer, senderId) {
-  console.log("video-call-local-offer:\n", offer, "\n", "senderId", senderId, "currentUserId", socket.id);
+socket.on('video-call-local-offer', function (offer, senderId) {
+  console.log('video-call-local-offer:\n', offer, '\n', 'senderId', senderId, 'currentUserId', socket.id);
   if (remotePeerConnection) {
-    console.log(" -> already created connection");
+    console.log(' -> already created connection');
     return;
   }
 
@@ -166,34 +166,34 @@ socket.on("video-call-local-offer", function (offer, senderId) {
   remotePeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
   remotePeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
   remotePeerConnection.ontrack = function (event) {
-    console.log("ontrack");
+    console.log('ontrack');
     remoteVideoElement.srcObject = event.streams[0];
   };
 
-  console.log("peerConnection.signalingState", remotePeerConnection.signalingState);
-  if (remotePeerConnection.signalingState !== "stable") {
+  console.log('peerConnection.signalingState', remotePeerConnection.signalingState);
+  if (remotePeerConnection.signalingState !== 'stable') {
     return;
   }
 
-  console.log("peerConnection.setRemoteDescription()");
+  console.log('peerConnection.setRemoteDescription()');
   remotePeerConnection.setRemoteDescription(
     new RTCSessionDescription({
-      type: "offer",
+      type: 'offer',
       sdp: decodeURIComponent(offer.sdp),
     })
   );
 
   remotePeerConnection.createAnswer(rctOffer).then(function (description) {
     remotePeerConnection.setLocalDescription(description);
-    console.log("send remote answer to others");
-    socket.emit("video-call-remote-answer", callRoomId, {
+    console.log('send remote answer to others');
+    socket.emit('video-call-remote-answer', callRoomId, {
       type: description.type,
       sdp: encodeURIComponent(description.sdp),
     });
   });
 });
-socket.on("video-call-local-candidate", function (data, senderId) {
-  console.log("video-call-local-candidate\n", data, "\nsenderId", senderId, "currentUserId", socket.id);
+socket.on('video-call-local-candidate', function (data, senderId) {
+  console.log('video-call-local-candidate\n', data, '\nsenderId', senderId, 'currentUserId', socket.id);
   var candidate = new RTCIceCandidate({
     candidate: decodeURIComponent(data.candidate),
     sdpMLineIndex: data.sdpMLineIndex,
@@ -201,8 +201,8 @@ socket.on("video-call-local-candidate", function (data, senderId) {
 
   remotePeerConnection.addIceCandidate(candidate);
 });
-socket.on("video-call-remote-answer", function (data, senderId) {
-  console.log("video-call-remote-answer\n", data, "\n senderId", senderId, "currentUserId", socket.id);
+socket.on('video-call-remote-answer', function (data, senderId) {
+  console.log('video-call-remote-answer\n', data, '\n senderId', senderId, 'currentUserId', socket.id);
   localPeerConnection.setRemoteDescription(
     new RTCSessionDescription({
       type: data.type,
@@ -233,18 +233,18 @@ function closeVideoCall() {
   remotePeerConnection.close();
   remotePeerConnection = null;
 
-  remoteVideoElement.removeAttribute("srcObject");
+  remoteVideoElement.removeAttribute('srcObject');
 
   btnCall.disabled = false;
-  btnCall.innerText = "Call";
+  btnCall.innerText = 'Call';
 
   btnStop.disabled = true;
 }
 
 function setupLocalConnection() {
-  console.log("setupLocalConnection()");
+  console.log('setupLocalConnection()');
   if (localPeerConnection) {
-    console.log("  -> localPeerConnection already setup");
+    console.log('  -> localPeerConnection already setup');
     return;
   }
   localPeerConnection = new RTCPeerConnection(iceServersConfig);
@@ -260,7 +260,7 @@ function setupLocalConnection() {
     localPeerConnection.createOffer(rctOffer).then(function (description) {
       localPeerConnection.setLocalDescription(description);
 
-      socket.emit("video-call-local-offer", callRoomId, {
+      socket.emit('video-call-local-offer', callRoomId, {
         type: description.type,
         sdp: encodeURIComponent(description.sdp),
       });
@@ -269,14 +269,14 @@ function setupLocalConnection() {
 }
 
 function handleTrackEvent(event) {
-  console.log("ontrack", event);
+  console.log('ontrack', event);
   remoteVideoElement.srcObject = event.streams[0];
 }
 
 function handleICECandidateEvent(event) {
   if (event.candidate) {
-    socket.emit("video-call-local-candidate", callRoomId, {
-      type: "new-ice-candidate",
+    socket.emit('video-call-local-candidate', callRoomId, {
+      type: 'new-ice-candidate',
       candidate: encodeURIComponent(event.candidate.candidate),
       sdpMLineIndex: event.candidate.sdpMLineIndex,
     });
@@ -285,9 +285,9 @@ function handleICECandidateEvent(event) {
 
 function handleICEConnectionStateChangeEvent(event) {
   switch (event.target.iceConnectionState) {
-    case "closed":
-    case "failed":
-    case "disconnected":
+    case 'closed':
+    case 'failed':
+    case 'disconnected':
       closeVideoCall();
       break;
   }
@@ -295,7 +295,7 @@ function handleICEConnectionStateChangeEvent(event) {
 
 function handleSignalingStateChangeEvent(event) {
   switch (event.target.signalingState) {
-    case "closed":
+    case 'closed':
       closeVideoCall();
       break;
   }
@@ -303,7 +303,7 @@ function handleSignalingStateChangeEvent(event) {
 
 (function () {
   var urlSearch = new URLSearchParams(document.location.search);
-  var name = urlSearch.get("name") || "";
+  var name = urlSearch.get('name') || '';
   if (name.length > 0) {
     inputName.value = name;
     btnRegister.click();
