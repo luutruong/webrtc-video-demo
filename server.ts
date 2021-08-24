@@ -6,18 +6,19 @@ import SocketRoom from './lib/socket/room';
 import EntityUsers from './lib/entity/users';
 import EntityRooms from './lib/entity/rooms';
 import SocketVideoCall from './lib/socket/video-call';
+import path from 'path';
 
 const app: Application = express();
 const server = http.createServer(app);
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/video-call', (_req: Request, res: Response) => {
-  res.sendFile(__dirname + '/public/video-call.html');
+app.get('/', (_req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-app.use('/', (_req: Request, res: Response) => {
-  res.sendFile(__dirname + '/public/index.html');
+app.get('/video-call', (_req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'public/video-call.html'));
 });
 
 const io = new Server(server, {

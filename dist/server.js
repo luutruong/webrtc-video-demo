@@ -11,29 +11,30 @@ const room_1 = __importDefault(require("./lib/socket/room"));
 const users_1 = __importDefault(require("./lib/entity/users"));
 const rooms_1 = __importDefault(require("./lib/entity/rooms"));
 const video_call_1 = __importDefault(require("./lib/socket/video-call"));
+const path_1 = __importDefault(require("path"));
 const app = express_1.default();
 const server = http_1.default.createServer(app);
-app.use(express_1.default.static("public"));
-app.use("/video-call", (_req, res) => {
-    res.sendFile(__dirname + "/public/video-call.html");
+app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+app.get('/', (_req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'public/index.html'));
 });
-app.use("/", (_req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
+app.get('/video-call', (_req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'public/video-call.html'));
 });
 const io = new socket_io_1.Server(server, {
 // socket.io options
 });
 const userManager = new users_1.default({});
 const roomManager = new rooms_1.default({});
-io.on("connection", function (socket) {
-    console.log("user connected", socket.id);
+io.on('connection', function (socket) {
+    console.log('user connected', socket.id);
     userManager.add(socket.id);
-    socket.on("set-name", function (name) {
+    socket.on('set-name', function (name) {
         if (userManager.updateName(socket.id, name)) {
-            socket.emit("set-name-ok");
+            socket.emit('set-name-ok');
         }
         else {
-            socket.emit("set-name-error", `Name '${name}' has been taken.`);
+            socket.emit('set-name-error', `Name '${name}' has been taken.`);
         }
     });
     const socketRoom = new room_1.default(io, socket, roomManager);
@@ -42,12 +43,12 @@ io.on("connection", function (socket) {
     webrtcListener.listen();
     const videoCall = new video_call_1.default(io, socket, userManager, roomManager);
     videoCall.listen();
-    socket.on("disconnect", function () {
-        console.log("user disconnect", socket.id);
+    socket.on('disconnect', function () {
+        console.log('user disconnect', socket.id);
         userManager.delete(socket.id);
         socketRoom.onDisconnect();
     });
 });
 server.listen(process.env.PORT || 8080, () => {
-    console.log("App started at: http://localhost:8080");
+    console.log('App started at: http://localhost:8080');
 });

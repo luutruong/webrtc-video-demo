@@ -4,7 +4,7 @@ class EntityUsers {
     constructor(users) {
         this.users = users;
     }
-    add(id, name = "") {
+    add(id, name = '') {
         if (this.has(id)) {
             return;
         }
