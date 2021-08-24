@@ -139,7 +139,7 @@ socket.on('room-create-ok', function () {
   start();
 });
 socket.on('room-deleted', function () {
-  
+
 });
 
 // owner events
@@ -309,7 +309,7 @@ function createHost() {
 }
 
 function start() {
-  navigator.getUserMedia({video: true, audio: false}, function (stream) {
+  navigator.getUserMedia({video: true, audio: true}, function (stream) {
     localVideoElement.srcObject = stream;
     localVideoElement.play();
 
