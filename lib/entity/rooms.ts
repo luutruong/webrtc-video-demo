@@ -13,9 +13,12 @@ class EntityRooms {
     }
 
     this.rooms[roomId] = {
+      id: roomId,
       users: new Set(),
       ownerUserId,
     };
+    this.addUser(roomId, ownerUserId);
+    console.log('created room', roomId, 'ownerUserId:', ownerUserId);
 
     return true;
   }
@@ -27,6 +30,7 @@ class EntityRooms {
   public delete(roomId: string): boolean {
     if (this.has(roomId)) {
       delete this.rooms[roomId];
+      console.log('deleted room', roomId);
 
       return true;
     }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>WebRTC Demo: Video Call</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h3>Step 1: Register your name</h3>
+      <div class="pairs">
+        <input class="input" placeholder="Enter your name" id="input-name" style="margin-right: 10px;" />
+        <button class="btn" id="btn-register">Register</button>
+      </div>
+
+      <h3>Step 2: Enter name to call</h3>
+      <div class="pairs">
+        <input class="input" placeholder="Enter name" id="input-call-name" style="margin-right: 10px;" />
+        <button class="btn" id="btn-call">Call</button>
+        <button class="btn btn-danger" id="btn-stop" style="margin-left: 10px;">Stop</button>
+      </div>
+
+      <div class="calling" style="display: none;">
+        <span class="calling-text">ZZZ calling...</span>
+        <button class="btn calling-accept">Accept</button>
+        <button class="btn btn-danger calling-deny">Deny</button>
+      </div>
+
+      <div class="video-container">
+        <video autoplay id="remote-video" width="600" height="560"></video>
+      </div>
+    </div>
+
+    <script src="https://webrtchacks.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="js/video_call.js"></script>
+  </body>
+</html>

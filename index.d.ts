@@ -1,6 +1,12 @@
 export interface Room {
+  id: string;
   users: Set<string>;
   ownerUserId: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
 }
 
 export interface SocketEventWebRTCOffer extends WebRTCOffer {

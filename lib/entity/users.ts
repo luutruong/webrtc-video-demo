@@ -1,23 +1,56 @@
+import { User } from "../..";
+
 class EntityUsers {
-  private users: Set<string>;
+  private users: {[id: string]: User};
 
-  constructor(users: Set<string>) {
-    this.users = new Set(users);
+  constructor(users: {[id: string]: User}) {
+    this.users = users;
   }
 
-  public add(userId: string): void {
-    this.users.add(userId);
+  public add(id: string, name: string = ''): void {
+    if (this.has(id)) {
+      return;
+    }
+
+    this.users[id] = {
+      id,
+      name,
+    };
   }
 
-  public delete(userId: string): void {
-    this.users.delete(userId);
+  public updateName(id: string, name: string): boolean {
+    if (!this.has(id)) {
+      return false;
+    }
+
+    const exists = Object.values(this.users).filter(user => user.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+    if (exists.length > 0) {
+      return false;
+    }
+
+    this.users[id].name = name;
+    return true;
   }
 
-  public has(userId: string): boolean {
-    return this.users.has(userId);
+  public delete(id: string): void {
+    if (this.has(id)) {
+      delete this.users[id];
+    }
   }
 
-  public getUsers(): Set<string> {
+  public has(id: string): boolean {
+    return this.users.hasOwnProperty(id);
+  }
+
+  public get(id: string): User | null {
+    if (this.has(id)) {
+      return this.users[id];
+    }
+
+    return null;
+  }
+
+  public getAll(): {[id: string]: User} {
     return this.users;
   }
 }
