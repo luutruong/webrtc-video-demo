@@ -3,10 +3,16 @@
 - Video conference
 - Video call between 2 users
 
-## Installation
+## Running Locally
 
-Clone this repo to your local path and run `yarn install` to install dependencies. After installed just run `yarn dev` and open this URL to your
-browser [http://localhost:8080](http://localhost:8080) to see result.
+```bash
+$ git clone https://github.com/luutruong/webrtc-video-demo.git
+$ cd webrtc-video-demo
+$ yarn install
+$ yarn start
+```
+
+Your app should now be running on [http://localhost:8080](http://localhost:8080)
 
 ## Demo
 
