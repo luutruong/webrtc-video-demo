@@ -14,7 +14,7 @@ class EntityRooms {
 
     this.rooms[roomId] = {
       id: roomId,
-      users: new Set(),
+      users: [],
       ownerUserId,
     };
     this.addUser(roomId, ownerUserId);
@@ -59,7 +59,9 @@ class EntityRooms {
       return false;
     }
 
-    this.rooms[roomId].users.add(userId);
+    if (this.rooms[roomId].users.indexOf(userId) === -1) {
+      this.rooms[roomId].users.push(userId);
+    }
 
     return true;
   }
@@ -69,7 +71,7 @@ class EntityRooms {
       return false;
     }
 
-    this.rooms[roomId].users.delete(userId);
+    this.rooms[roomId].users = this.rooms[roomId].users.filter(id => id !== userId);
 
     return true;
   }
@@ -77,7 +79,7 @@ class EntityRooms {
   public hasUserJoined(roomId: string, userId: string): boolean {
     const room = this.get(roomId);
 
-    return room !== null && room.users.has(userId);
+    return room !== null && room.users.indexOf(userId) >= 0;
   }
 }
 

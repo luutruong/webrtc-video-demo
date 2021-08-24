@@ -27,30 +27,40 @@ class SocketVideoCall {
     this.socket.on('video-call-remote-answer', this.onRemoteAnswer.bind(this));
   }
 
-  private onEnd(): void {
-    // this.io.to(target).emit('video-call-ended');
+  private onEnd(roomId: string): void {
+    const room = this.roomManager.get(roomId);
+    if (!room) {
+      return
+    }
+
+    room.users
+      .filter(id => id !== this.socket.id)
+      .forEach(id => this.io.to(id).emit('video-call-ended'));
+    this.roomManager.delete(roomId);
   }
 
-  private onAccept(target: string): void {
-    this.roomManager.addUser(this.getRoomId(target), this.socket.id);
+  private onAccept(roomId: string): void {
+    this.roomManager.addUser(roomId, this.socket.id);
     // participant accepted ping back to room owner.
-    const room = this.roomManager.get(this.getRoomId(target));
+    const room = this.roomManager.get(roomId);
     const user = this.userManager.get(this.socket.id);
     if (room) {
-      room.users.forEach(id => {
-        if (id !== this.socket.id) {
-          this.io.to(id).emit('video-call-user-accepted', user);
-        }
-      })
+      room.users
+        .filter(id => id !== this.socket.id)
+        .forEach(id => this.io.to(id).emit('video-call-user-accepted', user, room.id))
     }
   }
 
-  private onDeny(target: string): void {
-    const room = this.roomManager.get(this.getRoomId(target));
-    if (room) {
-      this.io.to(room.ownerUserId).emit('video-call-user-denied', this.userManager.get(this.socket.id));
-      this.roomManager.delete(room.id);
+  private onDeny(roomId: string): void {
+    const room = this.roomManager.get(roomId);
+    if (!room) {
+      return
     }
+
+    room.users
+      .filter(id => id !== this.socket.id)
+      .forEach(id => this.io.to(id).emit('video-call-user-denied'));
+    this.roomManager.removeUser(roomId, this.socket.id);
   }
 
   private onCallTo(target: string): void {
@@ -78,18 +88,40 @@ class SocketVideoCall {
     this.roomManager.add(this.getRoomId(this.socket.id), this.socket.id);
 
     // need user confirm.
-    this.io.to(matchUserId).emit('video-call-to-confirm', caller);
+    this.io.to(matchUserId).emit('video-call-to-confirm', caller, this.getRoomId(this.socket.id));
   }
 
-  private onLocalOffer(target: string, data: SocketEventWebRTCOffer): void {
-    
+  // WebRTC events
+  private onLocalOffer(roomId: string, data: SocketEventWebRTCOffer): void {
+    const room = this.roomManager.get(roomId);
+    if (!room) {
+      return
+    }
+
+    room.users
+    .filter(id => id !== this.socket.id)
+    .forEach(id => this.io.to(id).emit('video-call-local-offer', data, this.socket.id));
   }
 
-  private onLocalCandidate(target: string, data: SocketEventWebRTCCandidate): void {
-    
+  private onLocalCandidate(roomId: string, data: SocketEventWebRTCCandidate): void {
+    const room = this.roomManager.get(roomId);
+    if (!room) {
+      return
+    }
+
+    room.users
+      .filter(id => id !== this.socket.id)
+      .forEach(id => this.io.to(id).emit('video-call-local-candidate', data, this.socket.id));
   }
-  private onRemoteAnswer(target: string, data: SocketEventWebRTCAnswer): void {
-    
+  private onRemoteAnswer(roomId: string, data: SocketEventWebRTCAnswer): void {
+    const room = this.roomManager.get(roomId);
+    if (!room) {
+      return
+    }
+
+    room.users
+      .filter(id => id !== this.socket.id)
+      .forEach(id => this.io.to(id).emit('video-call-remote-answer', data, this.socket.id));
   }
 
   private getRoomId(socketId: string): string {
