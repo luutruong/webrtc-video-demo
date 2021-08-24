@@ -39,7 +39,7 @@ var peerConnections = {
 
 btnStartElement.addEventListener('click', function () {
   if (streamRoomId) {
-    socket.emit('livestream-stop', {id: streamRoomId});
+    socket.emit('room-delete', streamRoomId);
 
     btnStartElement.innerText = 'Start';
 
@@ -90,14 +90,12 @@ btnStartElement.addEventListener('click', function () {
   btnJoinElement.disabled = true;
   inputJoinLivestreamId.disabled = true;
 
-  socket.emit('livestream-start', {id: streamRoomId});
-
-  start();
+  socket.emit('room-create', streamRoomId);
 });
 
 btnJoinElement.addEventListener('click', function () {
   if (streamRoomId) {
-    socket.emit('livestream-leave', {id: streamRoomId});
+    socket.emit('room-leave', streamRoomId);
 
     this.innerText = 'Join Livestream';
 
@@ -126,40 +124,43 @@ btnJoinElement.addEventListener('click', function () {
   inputCreateLivestreamId.disabled = true;
   watcherListElement.style.display = 'none';
 
-  socket.emit('livestream-join', {id: streamRoomId});
+  socket.emit('room-join', streamRoomId);
 });
 
 // regular events
-socket.on('livestream-start-error', function (data) {
+socket.on('room-create-error', function (err) {
   _isStarted = false;
   streamRoomId = false;
   btnStartElement.innerText = 'Start';
 
-  alert(data.error);
+  alert(err);
+});
+socket.on('room-create-ok', function () {
+  start();
+});
+socket.on('room-deleted', function () {
+  
 });
 
 // owner events
-socket.on('livestream-user-joined', function (data) {
-  _logSocket('livestream-user-joined', data);
-
+socket.on('room-user-joined', function (userId) {
   var li = document.createElement('li');
-  li.setAttribute('id', data.userId);
-  li.innerText = data.userId;
+  li.setAttribute('id', userId);
+  li.innerText = userId;
   watcherListElement.appendChild(li);
 
-  createWatcher(data.userId);
+  createWatcher(userId);
 });
-socket.on('livestream-user-leaved', function (id) {
-  if (!id) {
+socket.on('room-user-leaved', function (userId) {
+  if (!userId) {
     return;
   }
-
-  var liElement = document.getElementById(id);
+  var liElement = document.getElementById(userId);
   if (liElement) {
     watcherListElement.removeChild(liElement);
   }
 
-  removeWatcher(id);
+  removeWatcher(userId);
 });
 
 socket.on('webrtc-host-offer', function (data) {

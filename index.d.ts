@@ -1,5 +1,5 @@
 export interface Room {
-  users: string[];
+  users: Set<string>;
   ownerUserId: string;
 }
 
