@@ -9,7 +9,7 @@
 $ git clone https://github.com/luutruong/webrtc-video-demo.git
 $ cd webrtc-video-demo
 $ yarn install
-$ yarn start
+$ yarn dev
 ```
 
 Your app should now be running on [http://localhost:8080](http://localhost:8080)
