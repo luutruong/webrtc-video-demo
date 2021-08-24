@@ -2,42 +2,9 @@
 <html lang="en-US">
   <head>
     <title>WebRTC Demo</title>
-    <style>
-      video {
-        border: 1px solid #999;
-      }
-      button {
-        appearance: none;
-        padding: 12px 36px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      .input {
-        padding: 12px;
-        appearance: none;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-      }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      }
-      .pairs {
-        display: flex;
-        flex-direction: row;
-        margin-top: 20px;
-        align-items: center;
-        justify-content: center;
-      }
-      .separator {
-        display: inline-block;
-        margin: 0 20px;
-      }
-      .container {
-        max-width: 960px;
-        margin: 0 auto;
-      }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
     <div class="container">
@@ -48,12 +15,12 @@
       <div class="pairs">
         <div>
           <input type="text" class="input" id="create-livestream-id" placeholder="Livestream ID" />
-          <button id="btn-start">Start</button>
+          <button class="btn" id="btn-start">Start</button>
         </div>
         <span class="separator">OR</span>
         <div>
           <input type="text" class="input" id="join-livestream-id" placeholder="Livestream ID" />
-          <button id="btn-join">Join Livestream</button>
+          <button class="btn" id="btn-join">Join Livestream</button>
         </div>
       </div>
   

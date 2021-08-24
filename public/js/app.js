@@ -67,9 +67,11 @@ btnStartElement.addEventListener('click', function () {
       remote: {},
     };
 
-    watcherListElement.children.forEach(function () {
-      watcherListElement.removeChild(this);
-    });
+    if (watcherListElement.hasChildNodes) {
+      watcherListElement.childNodes.forEach(function () {
+        watcherListElement.removeChild(this);
+      });
+    }
 
     return;
   }
